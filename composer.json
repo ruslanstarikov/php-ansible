@@ -1,5 +1,5 @@
 {
-  "name": "asm/php-ansible",
+  "name": "ruslanstarikov/php-ansible",
   "description": "php wrapper for ansible commands",
   "keywords": [],
   "homepage": "https://github.com/maschmann/php-ansible",
