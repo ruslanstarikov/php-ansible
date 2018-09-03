@@ -261,7 +261,7 @@ final class AnsiblePlaybook extends AbstractAnsibleCommand implements AnsiblePla
      */
     public function noCows()
     {
-        $this->processBuilder->setEnv('ANSIBLE_NOCOWS', 1);
+        $this->process->setEnv('ANSIBLE_NOCOWS', 1);
 
         return $this;
     }

@@ -10,7 +10,7 @@
 
 namespace Asm\Ansible\Command;
 
-use Symfony\Component\Process\ProcessBuilder;
+use Symfony\Component\Process\Process;
 
 /**
  * Class AbstractAnsibleCommand
@@ -21,9 +21,9 @@ use Symfony\Component\Process\ProcessBuilder;
 abstract class AbstractAnsibleCommand
 {
     /**
-     * @var ProcessBuilder
+     * @var Process
      */
-    protected $processBuilder;
+    protected $process;
 
     /**
      * @var array
@@ -41,11 +41,11 @@ abstract class AbstractAnsibleCommand
     private $baseOptions;
 
     /**
-     * @param ProcessBuilder $processBuilder
+     * @param Process $process
      */
-    public function __construct(ProcessBuilder $processBuilder)
+    public function __construct(Process $process)
     {
-        $this->processBuilder = $processBuilder;
+        $this->process = $process;
         $this->options = [];
         $this->parameters = [];
         $this->baseOptions = [];
@@ -60,6 +60,7 @@ abstract class AbstractAnsibleCommand
     protected function prepareArguments($asArray = true)
     {
         $arguments = array_merge(
+            [$this->process->getCommandLine()],
             [$this->getBaseOptions()],
             $this->getOptions(),
             $this->getParameters()
@@ -96,7 +97,7 @@ abstract class AbstractAnsibleCommand
     /**
      * Get all options as array.
      *
-     * @return string
+     * @return array
      */
     protected function getOptions()
     {
@@ -112,7 +113,7 @@ abstract class AbstractAnsibleCommand
     /**
      * Get all parameters as array.
      *
-     * @return string
+     * @return array
      */
     protected function getParameters()
     {
@@ -124,6 +125,7 @@ abstract class AbstractAnsibleCommand
      * Add base options to internal storage.
      *
      * @param string $baseOption
+     *
      * @return $this
      */
     protected function addBaseoption($baseOption)
@@ -167,11 +169,8 @@ abstract class AbstractAnsibleCommand
      */
     protected function runProcess($callback)
     {
-        $process = $this->processBuilder
-            ->setArguments(
-                $this->prepareArguments()
-            )
-            ->getProcess();
+        $process = $this->process;
+        $process->setCommandLine($this->prepareArguments());
 
         // exitcode
         $result = $process->run($callback);

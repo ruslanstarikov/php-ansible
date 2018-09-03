@@ -4,3 +4,4 @@ tmp
 
 #files
 composer.lock
+.idea/

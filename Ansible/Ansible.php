@@ -15,6 +15,7 @@ use Asm\Ansible\Command\AnsibleGalaxyInterface;
 use Asm\Ansible\Command\AnsiblePlaybook;
 use Asm\Ansible\Command\AnsiblePlaybookInterface;
 use Asm\Ansible\Exception\CommandException;
+use Symfony\Component\Process\Process;
 use Symfony\Component\Process\ProcessBuilder;
 
 /**
@@ -105,16 +106,15 @@ final class Ansible
 
     /**
      * @param string $prefix command to execute
-     * @return ProcessBuilder
+     *
+     * @return Process
      */
     private function createProcess($prefix)
     {
-        $process = new ProcessBuilder();
+        $process = new Process($prefix);
+        $process->setWorkingDirectory($this->ansibleBaseDir)->setTimeout($this->timeout);
 
-        return $process
-            ->setPrefix($prefix)
-            ->setWorkingDirectory($this->ansibleBaseDir)
-            ->setTimeout($this->timeout);
+        return $process;
     }
 
     /**
